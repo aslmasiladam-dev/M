@@ -1,6 +1,5 @@
 package com.aslmasiladam.androidarchitecturehub
 
-import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.WindowManager
@@ -10,10 +9,11 @@ import android.webkit.WebViewClient
 import android.widget.TextView
 import android.widget.Toast
 import androidx.biometric.BiometricManager
+import androidx.fragment.app.FragmentActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 
-class MainActivity : Activity() {
+class MainActivity : FragmentActivity() {
     private var webView: WebView? = null
     private var authenticated = false
     private var needsAuthentication = true
@@ -133,10 +133,21 @@ class MainActivity : Activity() {
             setBackgroundColor(Color.rgb(8, 22, 34))
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
-            settings.allowFileAccess = true
+            settings.allowFileAccess = false
+            settings.allowContentAccess = false
             settings.loadsImagesAutomatically = true
             settings.javaScriptCanOpenWindowsAutomatically = false
-            webViewClient = WebViewClient()
+            webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView,
+                    request: android.webkit.WebResourceRequest
+                ): Boolean {
+                    val target = request.url
+                    return !(target.scheme == "file" &&
+                        target.host == null &&
+                        target.path?.startsWith("/android_asset/") == true)
+                }
+            }
             webChromeClient = WebChromeClient()
         }
         webView = page
