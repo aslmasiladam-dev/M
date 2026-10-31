@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Architecture Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        android: {
+                            green: '#3DDC84',
+                            dark: '#073042',
+                            navy: '#081622',
+                            card: '#0F2332',
+                            border: '#1E3A50',
+                            accent: '#4285F4'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & FontAwesome icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Prism.js for Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-kotlin.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #081622;
+            color: #E2E8F0;
+        }
+        pre[class*="language-"] {
+            background: #0B1D2C !important;
+            border-radius: 0.75rem;
+            margin: 0;
+            border: 1px solid #1E3A50;
+        }
+        code[class*="language-"] {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0F2332;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1E3A50;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #3DDC84;
+        }
+        .glow-green {
+            box-shadow: 0 0 20px rgba(61, 220, 132, 0.15);
+        }
+        .tree-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 12px;
+            width: 1px;
+            background-color: #1E3A50;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col custom-scrollbar">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-android-green text-android-navy font-bold px-4 py-3 rounded-lg shadow-xl flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toast-message">Copied to clipboard!</span>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-android-navy/90 backdrop-blur-md border-b border-android-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-android-green/10 border border-android-green/30 flex items-center justify-center text-android-green text-xl font-bold">
+                    <i class="fa-brands fa-android"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-white leading-tight">Android Architecture Hub</h1>
+                    <p class="text-xs text-gray-400">Production-Ready Guides & Boilerplate</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- Global Search Input -->
+                <div class="relative hidden md:block w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                    <input type="text" id="globalSearch" placeholder="Search architecture, code, terms..." 
+                        class="w-full bg-android-card border border-android-border text-sm rounded-lg pl-9 pr-4 py-1.5 focus:outline-none focus:border-android-green transition-colors text-white placeholder-gray-400">
+                </div>
+
+                <a href="#quickstart" class="bg-android-green hover:bg-emerald-400 text-android-navy font-semibold px-4 py-1.5 rounded-lg text-sm transition-all shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-rocket"></i> Boilerplate
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Hero Section -->
+        <section class="relative rounded-2xl bg-gradient-to-r from-android-card via-android-dark to-android-navy border border-android-border p-8 md:p-12 overflow-hidden glow-green">
+            <div class="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none flex items-center pr-12">
+                <i class="fa-brands fa-android text-[260px] text-android-green"></i>
+            </div>
+            
+            <div class="max-w-3xl space-y-6 relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-android-green/10 border border-android-green/30 text-android-green text-xs font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-android-green animate-pulse"></span>
+                    Modern Android Tech Stack (2026 Ready)
+                </div>
+
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                    Clean Architecture & Modern <span class="text-transparent bg-clip-text bg-gradient-to-r from-android-green to-teal-300">Android Patterns</span>
+                </h2>
+
+                <p class="text-gray-300 text-base sm:text-lg leading-relaxed">
+                    Master modern scalable Android development with Jetpack Compose, Coroutines StateFlow, Clean Architecture layers, Hilt Dependency Injection, and robust Data sources (Room & Retrofit).
+                </p>
+
+                <div class="flex flex-wrap gap-3 pt-2">
+                    <span class="bg-android-navy/80 border border-android-border px-3 py-1.5 rounded-md text-xs font-mono text-gray-300 flex items-center gap-1.5"><i class="fa-solid fa-code text-android-green"></i> Jetpack Compose</span>
+                    <span class="bg-android-navy/80 border border-android-border px-3 py-1.5 rounded-md text-xs font-mono text-gray-300 flex items-center gap-1.5"><i class="fa-solid fa-layer-group text-blue-400"></i> Clean Architecture</span>
+                    <span class="bg-android-navy/80 border border-android-border px-3 py-1.5 rounded-md text-xs font-mono text-gray-300 flex items-center gap-1.5"><i class="fa-solid fa-syringe text-purple-400"></i> Hilt DI</span>
+                    <span class="bg-android-navy/80 border border-android-border px-3 py-1.5 rounded-md text-xs font-mono text-gray-300 flex items-center gap-1.5"><i class="fa-solid fa-database text-yellow-400"></i> Room & Retrofit</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Architecture Stack Section -->
+        <section class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-cubes text-android-green"></i>
+                        Interactive Layer Visualizer
+                    </h3>
+                    <p class="text-gray-400 text-sm mt-1">Click any layer in the Clean Architecture stack to inspect components, rules, and snippet focus.</p>
+                </div>
+                <div class="flex gap-2 text-xs font-mono">
+                    <button id="btn-reset-layer" class="px-3 py-1.5 rounded bg-android-card border border-android-border text-gray-300 hover:border-android-green transition-colors">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Show All Layers
+                    </button>
+                </div>
+            </div>
+
+            <!-- Visual Stack Container -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Stack Graphic -->
+                <div class="lg:col-span-5 space-y-4">
+                    <!-- Presentation Layer -->
+                    <div id="stack-presentation" onclick="selectStackLayer('presentation')" 
+                         class="stack-card cursor-pointer p-5 rounded-xl bg-android-card border-2 border-indigo-500/50 hover:border-indigo-400 transition-all shadow-lg hover:scale-[1.01]">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-indigo-300 flex items-center gap-2">
+                                <i class="fa-solid fa-desktop"></i> Presentation Layer
+                            </h4>
+                            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-mono">UI & State</span>
+                        </div>
+                        <p class="text-xs text-gray-300">Jetpack Compose UI, ViewModels, UI State Data Classes, Event Handling.</p>
+                        <div class="mt-3 flex flex-wrap gap-1.5">
+                            <span class="text-[10px] bg-android-navy px-2 py-0.5 rounded text-gray-400">Compose Screen</span>
+                            <span class="text-[10px] bg-android-navy px-2 py-0.5 rounded text-gray-400">StateFlow</span>
+                            <span class="text-[10px] bg-android-navy px-2 py-0.5 rounded text-gray-400">ViewModel</span>
+                        </div>
+                    </div>
+
+                    <!-- Data Flow Arrow Down -->
+                    <div class="flex justify-center text-gray-500 text-xs gap-4">
+                        <span><i class="fa-solid fa-arrow-down text-indigo-400"></i> Observes State</span>
+                        <span><i class="fa-solid fa-arrow-up text-emerald-400"></i> Triggers Events</span>
+                    </div>
+
+                    <!-- Domain Layer -->
+                    <div id="stack-domain" onclick="selectStackLayer('domain')" 
+                         class="stack-card cursor-pointer p-5 rounded-xl bg-android-card border-2 border-emerald-500/50 hover:border-emerald-400 transition-all shadow-lg hover:scale-[1.01]">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-emerald-300 flex items-center gap-2">
+                                <i class="fa-solid fa-brain"></i> Domain Layer
+                            </h4>
+                            <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">Business Logic</span>
+                        </div>
+                        <p class="text-xs text-gray-300">Pure Kotlin (no Android framework dependencies). Use Cases, Entities, Repository Contracts.</p>
+                        <div class="mt-3 flex flex-wrap gap-1.5">
+                            <span class="text-[10px] bg-android-navy px-2 py-0.5 rounded text-gray-400">Use Cases</span>
+                            <span class="text-[10px] bg-android-navy px-2 py-0.5 rounded text-gray-400">Domain Models</span>
+                            <span class="text-[10px] bg-android-navy px-2 py-0.5 rounded text-gray-400">Repository Interfaces</span>
+                        </div>
+                    </div>
+
+                    <!-- Data Flow Arrow Down -->
+                    <div class="flex justify-center text-gray-500 text-xs gap-4">
+                        <span><i class="fa-solid fa-arrow-down text-emerald-400"></i> Calls UseCase</span>
+                        <span><i class="fa-solid fa-arrow-up text-amber-400"></i> Implements Interface</span>
+                    </div>
+
+                    <!-- Data Layer -->
+                    <div id="stack-data" onclick="selectStackLayer('data')" 
+                         class="stack-card cursor-pointer p-5 rounded-xl bg-android-card border-2 border-amber-500/50 hover:border-amber-400 transition-all shadow-lg hover:scale-[1.01]">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-amber-300 flex items-center gap-2">
+                                <i class="fa-solid fa-database"></i> Data Layer
+                            </h4>
+                            <span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono">Data Sources</span>
+                        </div>
+                        <p class="text-xs text-gray-300">Repository implementations, Local DB (Room), Network API (Retrofit), Data Mappers.</p>
+                        <div class="mt-3 flex flex-wrap gap-1.5">
+                            <span class="text-[10px] bg-android-navy px-2 py-0.5 rounded text-gray-400">Room DAO</span>
+                            <span class="text-[10px] bg-android-navy px-2 py-0.5 rounded text-gray-400">Retrofit API</span>
+                            <span class="text-[10px] bg-android-navy px-2 py-0.5 rounded text-gray-400">RepositoryImpl</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Layer Details Panel -->
+                <div class="lg:col-span-7 bg-android-card border border-android-border rounded-xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-android-border pb-4 mb-4">
+                            <h4 id="layer-detail-title" class="text-xl font-bold text-white flex items-center gap-2">
+                                Select a layer to inspect
+                            </h4>
+                            <span id="layer-detail-badge" class="text-xs px-2.5 py-1 rounded-full font-mono bg-android-border text-gray-300">Architecture Details</span>
+                        </div>
+
+                        <p id="layer-detail-desc" class="text-sm text-gray-300 mb-6 leading-relaxed">
+                            Clean Architecture enforces strict separation of concerns. Click on any layer on the left to see its responsibilities, dependencies, best practices, and code structure rules.
+                        </p>
+
+                        <div id="layer-detail-rules" class="space-y-3">
+                            <!-- Dynamic Rules Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-android-border flex items-center justify-between text-xs text-gray-400">
+                        <span><i class="fa-solid fa-shield-halved text-android-green mr-1"></i> Dependency Rule: Dependencies must point inwards towards Domain.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Folder Structure Explorer -->
+        <section class="space-y-6">
+            <div>
+                <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-folder-tree text-android-green"></i>
+                    Clean Architecture Project Structure
+                </h3>
+                <p class="text-gray-400 text-sm mt-1">Recommended package layout for multi-module or feature-based clean architecture in modern Android projects.</p>
+            </div>
+
+            <div class="bg-android-card border border-android-border rounded-xl p-6 font-mono text-sm">
+                <div class="flex items-center justify-between mb-4 border-b border-android-border pb-3">
+                    <span class="text-xs text-gray-400 uppercase tracking-wider">Project Root Directory</span>
+                    <button id="toggle-tree-btn" class="text-xs text-android-green hover:underline">
+                        Collapse All
+                    </button>
+                </div>
+
+                <div class="space-y-2 text-gray-300">
+                    <!-- App Module -->
+                    <div class="tree-item">
+                        <div class="flex items-center gap-2 cursor-pointer hover:text-white" onclick="toggleTreeNode('tree-app')">
+                            <i class="fa-solid fa-chevron-down text-xs text-gray-500 transition-transform" id="tree-app-icon"></i>
+                            <i class="fa-solid fa-box text-purple-400"></i>
+                            <span class="font-bold text-purple-300">:app</span>
+                            <span class="text-xs text-gray-500 font-sans">(Application Entry & Hilt Setup)</span>
+                        </div>
+                        <div id="tree-app" class="ml-6 pl-4 border-l border-android-border space-y-1.5 mt-1.5">
+                            <div class="text-xs"><i class="fa-solid fa-file-code text-android-green mr-1.5"></i>MainApplication.kt</div>
+                            <div class="text-xs"><i class="fa-solid fa-file-code text-android-green mr-1.5"></i>MainActivity.kt</div>
+                        </div>
+                    </div>
+
+                    <!-- Core Module -->
+                    <div class="tree-item mt-2">
+                        <div class="flex items-center gap-2 cursor-pointer hover:text-white" onclick="toggleTreeNode('tree-core')">
+                            <i class="fa-solid fa-chevron-down text-xs text-gray-500 transition-transform" id="tree-core-icon"></i>
+                            <i class="fa-solid fa-box text-blue-400"></i>
+                            <span class="font-bold text-blue-300">:core</span>
+                            <span class="text-xs text-gray-500 font-sans">(Shared Network, DB, Common UI Components)</span>
+                        </div>
+                        <div id="tree-core" class="ml-6 pl-4 border-l border-android-border space-y-1.5 mt-1.5">
+                            <div class="text-xs text-blue-200"><i class="fa-solid fa-folder text-yellow-500 mr-1.5"></i>network/ (Retrofit client, Interceptors)</div>
+                            <div class="text-xs text-blue-200"><i class="fa-solid fa-folder text-yellow-500 mr-1.5"></i>database/ (Room DB instance, Converters)</div>
+                            <div class="text-xs text-blue-200"><i class="fa-solid fa-folder text-yellow-500 mr-1.5"></i>designsystem/ (Theme, Reusable Composables)</div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Module -->
+                    <div class="tree-item mt-2">
+                        <div class="flex items-center gap-2 cursor-pointer hover:text-white" onclick="toggleTreeNode('tree-feature')">
+                            <i class="fa-solid fa-chevron-down text-xs text-gray-500 transition-transform" id="tree-feature-icon"></i>
+                            <i class="fa-solid fa-box text-emerald-400"></i>
+                            <span class="font-bold text-emerald-300">:feature:users</span>
+                            <span class="text-xs text-gray-500 font-sans">(Feature Specific Clean Architecture Stack)</span>
+                        </div>
+                        <div id="tree-feature" class="ml-6 pl-4 border-l border-android-border space-y-2 mt-1.5">
+                            
+                            <!-- Domain -->
+                            <div>
+                                <span class="text-xs font-semibold text-emerald-400"><i class="fa-solid fa-folder text-yellow-500 mr-1.5"></i>domain/</span>
+                                <div class="ml-4 pl-3 border-l border-android-border space-y-1 mt-1 text-xs text-gray-400">
+                                    <div><i class="fa-solid fa-file-code text-emerald-300 mr-1"></i>model/User.kt</div>
+                                    <div><i class="fa-solid fa-file-code text-emerald-300 mr-1"></i>repository/UserRepository.kt</div>
+                                    <div><i class="fa-solid fa-file-code text-emerald-300 mr-1"></i>usecase/GetUsersUseCase.kt</div>
+                                </div>
+                            </div>
+
+                            <!-- Data -->
+                            <div>
+                                <span class="text-xs font-semibold text-amber-400"><i class="fa-solid fa-folder text-yellow-500 mr-1.5"></i>data/</span>
+                                <div class="ml-4 pl-3 border-l border-android-border space-y-1 mt-1 text-xs text-gray-400">
+                                    <div><i class="fa-solid fa-file-code text-amber-300 mr-1"></i>local/UserDao.kt & UserEntity.kt</div>
+                                    <div><i class="fa-solid fa-file-code text-amber-300 mr-1"></i>remote/UserApiService.kt</div>
+                                    <div><i class="fa-solid fa-file-code text-amber-300 mr-1"></i>repository/UserRepositoryImpl.kt</div>
+                                </div>
+                            </div>
+
+                            <!-- Presentation -->
+                            <div>
+                                <span class="text-xs font-semibold text-indigo-400"><i class="fa-solid fa-folder text-yellow-500 mr-1.5"></i>presentation/</span>
+                                <div class="ml-4 pl-3 border-l border-android-border space-y-1 mt-1 text-xs text-gray-400">
+                                    <div><i class="fa-solid fa-file-code text-indigo-300 mr-1"></i>UserListScreen.kt (Compose UI)</div>
+                                    <div><i class="fa-solid fa-file-code text-indigo-300 mr-1"></i>UserListViewModel.kt</div>
+                                    <div><i class="fa-solid fa-file-code text-indigo-300 mr-1"></i>UserUiState.kt</div>
+                                </div>
+                            </div>
+
+                            <!-- DI Module -->
+                            <div>
+                                <span class="text-xs font-semibold text-purple-400"><i class="fa-solid fa-folder text-yellow-500 mr-1.5"></i>di/</span>
+                                <div class="ml-4 pl-3 border-l border-android-border space-y-1 mt-1 text-xs text-gray-400">
+                                    <div><i class="fa-solid fa-file-code text-purple-300 mr-1"></i>UserModule.kt (Hilt)</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Code Boilerplate Explorer -->
+        <section id="quickstart" class="space-y-6 scroll-mt-20">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-code text-android-green"></i>
+                        Production Code Boilerplates
+                    </h3>
+                    <p class="text-gray-400 text-sm mt-1">Ready-to-use, production-grade Kotlin snippets for every layer of your application.</p>
+                </div>
+            </div>
+
+            <!-- Boilerplate Container -->
+            <div class="bg-android-card border border-android-border rounded-xl overflow-hidden shadow-2xl">
+                <!-- Navigation Tabs -->
+                <div class="flex overflow-x-auto border-b border-android-border bg-android-navy/60 custom-scrollbar">
+                    <button onclick="switchTab('presentation')" id="tab-presentation" class="tab-btn active px-6 py-3.5 text-sm font-semibold border-b-2 border-android-green text-android-green flex items-center gap-2 whitespace-nowrap transition-colors">
+                        <i class="fa-solid fa-desktop text-indigo-400"></i> UI & ViewModel
+                    </button>
+                    <button onclick="switchTab('domain')" id="tab-domain" class="tab-btn px-6 py-3.5 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-gray-200 flex items-center gap-2 whitespace-nowrap transition-colors">
+                        <i class="fa-solid fa-brain text-emerald-400"></i> Domain Layer
+                    </button>
+                    <button onclick="switchTab('data')" id="tab-data" class="tab-btn px-6 py-3.5 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-gray-200 flex items-center gap-2 whitespace-nowrap transition-colors">
+                        <i class="fa-solid fa-database text-amber-400"></i> Data (Room & Retrofit)
+                    </button>
+                    <button onclick="switchTab('hilt')" id="tab-hilt" class="tab-btn px-6 py-3.5 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-gray-200 flex items-center gap-2 whitespace-nowrap transition-colors">
+                        <i class="fa-solid fa-syringe text-purple-400"></i> Hilt Dependency Injection
+                    </button>
+                </div>
+
+                <!-- Tab Content Panel -->
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <span id="snippet-file-name" class="font-mono text-xs text-android-green font-bold bg-android-navy px-3 py-1 rounded border border-android-border">
+                                UserListViewModel.kt & UserListScreen.kt
+                            </span>
+                        </div>
+                        <button onclick="copyCurrentSnippet()" class="px-3 py-1.5 rounded-lg bg-android-navy hover:bg-android-border border border-android-border text-xs text-gray-300 font-mono flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-copy"></i> Copy Code
+                        </button>
+                    </div>
+
+                    <!-- Code Box -->
+                    <div class="relative">
+                        <pre class="custom-scrollbar"><code id="code-display" class="language-kotlin"></code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Checklist & Best Practices -->
+        <section class="space-y-6">
+            <div>
+                <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-android-green"></i>
+                    Production Readiness Checklist
+                </h3>
+                <p class="text-gray-400 text-sm mt-1">Track your architecture compliance and production standards.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1: UI & State -->
+                <div class="bg-android-card border border-android-border rounded-xl p-5 space-y-4">
+                    <div class="flex items-center gap-2 text-indigo-400 font-bold border-b border-android-border pb-3">
+                        <i class="fa-solid fa-desktop"></i> UI & State Handling
+                    </div>
+                    <ul class="space-y-3 text-xs text-gray-300">
+                        <li class="flex items-start gap-2">
+                            <input type="checkbox" checked class="mt-0.5 rounded border-android-border text-android-green focus:ring-0">
+                            <span>Use <code>StateFlow</code> / <code>UiState</code> data class for immutable screen states.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <input type="checkbox" checked class="mt-0.5 rounded border-android-border text-android-green focus:ring-0">
+                            <span>Collect state with <code>collectAsStateWithLifecycle()</code> in Compose.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <input type="checkbox" class="mt-0.5 rounded border-android-border text-android-green focus:ring-0">
+                            <span>Keep Composables stateless by passing callbacks up.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Card 2: Domain & Business Logic -->
+                <div class="bg-android-card border border-android-border rounded-xl p-5 space-y-4">
+                    <div class="flex items-center gap-2 text-emerald-400 font-bold border-b border-android-border pb-3">
+                        <i class="fa-solid fa-brain"></i> Domain & Logic
+                    </div>
+                    <ul class="space-y-3 text-xs text-gray-300">
+                        <li class="flex items-start gap-2">
+                            <input type="checkbox" checked class="mt-0.5 rounded border-android-border text-android-green focus:ring-0">
+                            <span>Zero Android framework imports in <code>:domain</code> module.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <input type="checkbox" checked class="mt-0.5 rounded border-android-border text-android-green focus:ring-0">
+                            <span>Use Cases have a single public <code>operator fun invoke()</code>.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <input type="checkbox" class="mt-0.5 rounded border-android-border text-android-green focus:ring-0">
+                            <span>Return explicit <code>Result&lt;T&gt;</code> or custom Resource wrapper.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Card 3: Data & Offline Support -->
+                <div class="bg-android-card border border-android-border rounded-xl p-5 space-y-4">
+                    <div class="flex items-center gap-2 text-amber-400 font-bold border-b border-android-border pb-3">
+                        <i class="fa-solid fa-database"></i> Data & Networking
+                    </div>
+                    <ul class="space-y-3 text-xs text-gray-300">
+                        <li class="flex items-start gap-2">
+                            <input type="checkbox" checked class="mt-0.5 rounded border-android-border text-android-green focus:ring-0">
+                            <span>Separate Network DTOs, Room Entities, and Domain Models with Mappers.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <input type="checkbox" checked class="mt-0.5 rounded border-android-border text-android-green focus:ring-0">
+                            <span>Repository single source of truth (Offline-First cache using Room).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <input type="checkbox" class="mt-0.5 rounded border-android-border text-android-green focus:ring-0">
+                            <span>Inject <code>CoroutineDispatcher</code> (Dispatchers.IO) via Hilt for testing.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-android-navy border-t border-android-border py-8 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <i class="fa-brands fa-android text-android-green text-lg"></i>
+                <span class="text-gray-300 font-semibold">Android Architecture Hub</span>
+            </div>
+            <p>Built for Modern Android Developers & Teams • Clean Architecture & Jetpack Compose</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic & Snippets -->
+    <script>
+        // Snippet Storage
+        const snippets = {
+            presentation: {
+                fileName: "UserListScreen.kt & UserListViewModel.kt",
+                code: `// UI State definition
+data class UserUiState(
+    val isLoading: Boolean = false,
+    val users: List<User> = emptyList(),
+    val errorMessage: String? = null
+)
+
+// ViewModel with Hilt & StateFlow
+@HiltViewModel
+class UserListViewModel @Inject constructor(
+    private val getUsersUseCase: GetUsersUseCase
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(UserUiState())
+    val uiState: StateFlow<UserUiState> = _uiState.asStateFlow()
+
+    init {
+        loadUsers()
+    }
+
+    fun loadUsers() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            getUsersUseCase()
+                .onSuccess { userList ->
+                    _uiState.update { it.copy(isLoading = false, users = userList) }
+                }
+                .onFailure { exception ->
+                    _uiState.update { it.copy(isLoading = false, errorMessage = exception.message) }
+                }
+        }
+    }
+}
+
+// Jetpack Compose Screen UI
+@Composable
+fun UserListScreen(
+    viewModel: UserListViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    Scaffold(topBar = { TopAppBar(title = { Text("Users") }) }) { paddingValues ->
+        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            when {
+                uiState.isLoading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
+                uiState.errorMessage != null -> Text(
+                    text = uiState.errorMessage ?: "Unknown error",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+                else -> LazyColumn {
+                    items(uiState.users) { user ->
+                        UserRowItem(user = user)
+                    }
+                }
+            }
+        }
+    }
+}`
+            },
+            domain: {
+                fileName: "User.kt & GetUsersUseCase.kt",
+                code: `// Pure Domain Entity (No Framework Dependencies)
+data class User(
+    val id: String,
+    val name: String,
+    val email: String,
+    val avatarUrl: String
+)
+
+// Repository Interface Definition
+interface UserRepository {
+    suspend font getUsers(): Result<List<User>>
+}
+
+// UseCase encapsulating Business Logic
+class GetUsersUseCase @Inject constructor(
+    private val repository: UserRepository
+) {
+    suspend operator fun invoke(): Result<List<User>> {
+        return try {
+            val result = repository.getUsers()
+            // Business Rule: Filter out invalid users or sort by name
+            result.map { list -> list.sortedBy { it.name } }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+}`
+            },
+            data: {
+                fileName: "UserDao.kt, UserApiService.kt & UserRepositoryImpl.kt",
+                code: `// Room Local Database DAO
+@Dao
+interface UserDao {
+    @Query("SELECT * FROM users")
+    fun getUsersFlow(): Flow<List<UserEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUsers(users: List<UserEntity>)
+}
+
+// Retrofit API Service
+interface UserApiService {
+    @GET("users")
+    suspend fun fetchRemoteUsers(): List<UserDto>
+}
+
+// Data Layer Repository Implementation (Single Source of Truth)
+class UserRepositoryImpl @Inject constructor(
+    private val apiService: UserApiService,
+    private val userDao: UserDao,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : UserRepository {
+
+    override suspend fun getUsers(): Result<List<User>> = withContext(ioDispatcher) {
+        return@withContext try {
+            // Fetch from Remote Network API
+            val remoteDtos = apiService.fetchRemoteUsers()
+            
+            // Map DTO to Entity and Cache to Room
+            val entities = remoteDtos.map { it.toEntity() }
+            userDao.insertUsers(entities)
+
+            // Return mapped domain models
+            val domainModels = entities.map { it.toDomainModel() }
+            Result.success(domainModels)
+        } catch (e: Exception) {
+            // Fallback to local DB if available
+            Result.failure(e)
+        }
+    }
+}`
+            },
+            hilt: {
+                fileName: "AppModule.kt & RepositoryModule.kt",
+                code: `// Hilt Module for Network & DB Dependencies
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://api.example.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserApiService(retrofit: Retrofit): UserApiService {
+        return retrofit.create(UserApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(context, AppDatabase::class.java, "app.db").build()
+    }
+
+    @Provides
+    fun provideUserDao(database: AppDatabase): UserDao = database.userDao()
+}
+
+// Repository Binding Module
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRepository(
+        impl: UserRepositoryImpl
+    ): UserRepository
+}`
+            }
+        };
+
+        // Layer Details Map for Interactive Stack Visualizer
+        const layerDetails = {
+            presentation: {
+                title: "Presentation Layer (UI & State)",
+                badge: "Jetpack Compose + ViewModel",
+                desc: "Responsible for building UI components and managing UI states. It observes domain data changes and reacts to user interactions.",
+                rules: [
+                    "<strong>Framework:</strong> Jetpack Compose, Material3, Navigation Compose.",
+                    "<strong>State Management:</strong> StateFlow, SharedFlow for events, SavedStateHandle for state persistence.",
+                    "<strong>Rule:</strong> ViewModel depends ONLY on Use Cases or Repositories. UI depends on ViewModel."
+                ]
+            },
+            domain: {
+                title: "Domain Layer (Business Logic)",
+                badge: "Pure Kotlin",
+                desc: "The core heart of the application containing business rules, entities, and use cases. Completely isolated from framework dependencies.",
+                rules: [
+                    "<strong>Zero Dependencies:</strong> No Android APIs (Context, Bundle, Compose, etc.) imported here.",
+                    "<strong>Components:</strong> Use Cases (Interactors), Domain Entities, Repository Contracts (Interfaces).",
+                    "<strong>Rule:</strong> Highest level of isolation, enabling 100% fast JVM unit testing."
+                ]
+            },
+            data: {
+                title: "Data Layer (Networking & Persistence)",
+                badge: "Room + Retrofit",
+                desc: "Manages data retrieval, caching, network communication, and persistence logic. Implements domain repository interfaces.",
+                rules: [
+                    "<strong>Components:</strong> Retrofit API services, Room DAOs, Data Mappers, Data Store / SharedPreferences.",
+                    "<strong>Pattern:</strong> Single Source of Truth (SSOT) pattern combining local cache & network.",
+                    "<strong>Mappers:</strong> Converts DTOs & DB Entities into pure Domain Models before passing upward."
+                ]
+            }
+        };
+
+        let currentActiveTab = 'presentation';
+
+        // Initialize display code
+        function renderCode(tabKey) {
+            const snippet = snippets[tabKey];
+            if (!snippet) return;
+            
+            document.getElementById('snippet-file-name').innerText = snippet.fileName;
+            const codeEl = document.getElementById('code-display');
+            codeEl.textContent = snippet.code.trim();
+            Prism.highlightElement(codeEl);
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabKey) {
+            currentActiveTab = tabKey;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-android-green', 'text-android-green');
+                btn.classList.add('border-transparent', 'text-gray-400');
+            });
+            const activeBtn = document.getElementById(`tab-${tabKey}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-transparent', 'text-gray-400');
+                activeBtn.classList.add('border-android-green', 'text-android-green');
+            }
+            renderCode(tabKey);
+        }
+
+        // Layer Selection Logic
+        function selectStackLayer(layerKey) {
+            const data = layerDetails[layerKey];
+            if (!data) return;
+
+            // Highlight active stack box
+            document.querySelectorAll('.stack-card').forEach(card => {
+                card.classList.remove('ring-2', 'ring-android-green', 'scale-[1.02]');
+            });
+            const selectedCard = document.getElementById(`stack-${layerKey}`);
+            if (selectedCard) {
+                selectedCard.classList.add('ring-2', 'ring-android-green', 'scale-[1.02]');
+            }
+
+            // Update details panel
+            document.getElementById('layer-detail-title').innerText = data.title;
+            document.getElementById('layer-detail-badge').innerText = data.badge;
+            document.getElementById('layer-detail-desc').innerText = data.desc;
+
+            const rulesContainer = document.getElementById('layer-detail-rules');
+            rulesContainer.innerHTML = data.rules.map(rule => `
+                <div class="flex items-start gap-2 text-xs text-gray-300">
+                    <i class="fa-solid fa-angle-right text-android-green mt-0.5"></i>
+                    <div>${rule}</div>
+                </div>
+            `).join('');
+
+            // Automatically switch snippet tab to match layer
+            if (snippets[layerKey]) {
+                switchTab(layerKey);
+            }
+        }
+
+        // Reset Layer View
+        document.getElementById('btn-reset-layer')?.addEventListener('click', () => {
+            document.querySelectorAll('.stack-card').forEach(card => {
+                card.classList.remove('ring-2', 'ring-android-green', 'scale-[1.02]');
+            });
+            selectStackLayer('presentation');
+        });
+
+        // Copy Code Snippet
+        function copyCurrentSnippet() {
+            const codeText = snippets[currentActiveTab]?.code || "";
+            if (!codeText) return;
+
+            // Using standard clipboard API with fallback
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(codeText);
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = codeText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            }
+
+            showToast("Copied code to clipboard!");
+        }
+
+        // Toast Helper
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        // Tree View Toggle
+        function toggleTreeNode(id) {
+            const element = document.getElementById(id);
+            const icon = document.getElementById(`${id}-icon`);
+            if (element) {
+                if (element.classList.contains('hidden')) {
+                    element.classList.remove('hidden');
+                    if (icon) icon.style.transform = 'rotate(0deg)';
+                } else {
+                    element.classList.add('hidden');
+                    if (icon) icon.style.transform = 'rotate(-90deg)';
+                }
+            }
+        }
+
+        let isTreeCollapsed = false;
+        document.getElementById('toggle-tree-btn')?.addEventListener('click', () => {
+            const treeIds = ['tree-app', 'tree-core', 'tree-feature'];
+            isTreeCollapsed = !isTreeCollapsed;
+            treeIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (isTreeCollapsed) {
+                        el.classList.add('hidden');
+                    } else {
+                        el.classList.remove('hidden');
+                    }
+                }
+            });
+            document.getElementById('toggle-tree-btn').innerText = isTreeCollapsed ? 'Expand All' : 'Collapse All';
+        });
+
+        // Global Search Filter
+        document.getElementById('globalSearch')?.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            if (!query) return;
+
+            // Simple jump to snippet matching text
+            if (query.includes('compose') || query.includes('viewmodel') || query.includes('ui')) {
+                switchTab('presentation');
+            } else if (query.includes('usecase') || query.includes('domain') || query.includes('entity')) {
+                switchTab('domain');
+            } else if (query.includes('room') || query.includes('retrofit') || query.includes('dao') || query.includes('repository')) {
+                switchTab('data');
+            } else if (query.includes('hilt') || query.includes('di') || query.includes('module')) {
+                switchTab('hilt');
+            }
+        });
+
+        // Initial setup on load
+        window.onload = function() {
+            renderCode('presentation');
+            selectStackLayer('presentation');
+        };
+    </script>
+</body>
+</html>
