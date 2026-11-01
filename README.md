@@ -1,16 +1,26 @@
-# Android Architecture Hub
+# مركز مطوري OPPO Reno5
 
-Android WebView wrapper for the original `Android Architecture Hub.html`.
+لوحة تحكم Android بواجهة عربية موحدة، مخصصة لهاتف OPPO Reno5 CPH2159.
 
-## Build APK
-Every push to `main` starts the **Build Android APK** GitHub Actions workflow. You can also start it manually from **Actions → Build Android APK → Run workflow**. A successful run uploads the debug APK as the `AndroidArchitectureHub-debug-apk` artifact (retained for 14 days).
+## المزايا الحالية
+- واجهة عربية كاملة باتجاه RTL.
+- قفل دخول بالبصمة أو PIN الخاص بنظام Android.
+- تقييد تشغيل هذا الإصدار على الشركة OPPO والطراز CPH2159.
+- محفظة محلية افتراضية تبدأ من 10,000 دولار، مع إعادة ضبط وإضافة رصيد تجريبي.
+- محاكاة محلية لعملية دفع؛ لا تتصل ببوابة دفع ولا تخصم أموالًا.
+- شاشة توضح الأذونات المستخدمة وغير المطلوبة.
+- توضيح أن شارات التوثيق يجب أن تأتي من الخدمة الأصلية، ولا يتم تزويرها.
 
-- APK output: `app/build/outputs/apk/debug/app-debug.apk`
-- Application ID: `com.aslmasiladam.androidarchitecturehub`
-- Minimum Android: 6.0 (API 23)
-- Compile/target SDK: 35
-- Intended device: OPPO Reno5 / Android 13
+## بناء APK
+كل دفع إلى فرع `main` يشغّل سير عمل GitHub Actions **Build Android APK**. يمكن تشغيله يدويًا من:
+**Actions → Build Android APK → Run workflow**.
 
-The original HTML is bundled locally in the app. External CDN fonts, icons and libraries need an internet connection. The app requests internet access only; Android biometric/device-credential authentication is used for the app lock, and screenshots/recent-app previews are blocked.
+بعد نجاح البناء، نزّل artifact باسم `AndroidArchitectureHub-debug-apk` (صالح لمدة 14 يومًا).
+المسار الناتج: `app/build/outputs/apk/debug/app-debug.apk`.
 
-The debug APK is for testing. For public production distribution, create a private release keystore and store its credentials as GitHub Actions secrets; never commit the keystore or passwords.
+## تنبيهات الأمان
+- مبلغ 10,000 دولار رصيد محاكاة محلي فقط، وليس بطاقة Visa أو أموالًا حقيقية.
+- شاشة الدفع الحالية محاكاة فقط. ربط Stripe يتطلب إعداد Stripe Test Mode وخادمًا تجريبيًا آمنًا؛ لا تضع المفاتيح السرية داخل APK أو GitHub.
+- لا يطلب التطبيق أذونات شاملة. تُضاف الأذونات فقط عند الحاجة وبموافقة المستخدم.
+- لا توجد حسابات خارجية موصولة تلقائيًا ولا شارات توثيق مزيفة.
+- ملف APK الحالي Debug للاختبار، وليس إصدارًا موقعًا للنشر العام.
