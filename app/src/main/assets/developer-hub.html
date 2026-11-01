@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#081622">
+<title>مركز مطوري Reno5</title>
+<style>
+:root{color-scheme:dark;--bg:#081622;--panel:#102536;--line:#254256;--txt:#eef6fb;--muted:#a8bdca;--green:#3ddc84;--blue:#4b9cff;--warn:#ffc66d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:15px system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.65}
+header{padding:22px 18px 18px;background:#0c2030;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.wrap{max-width:850px;margin:auto}h1{font-size:22px;margin:0 0 4px}h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:0 0 8px}.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}
+nav{display:flex;gap:8px;overflow:auto;padding:12px 16px;max-width:882px;margin:auto}
+nav button,.btn{border:1px solid var(--line);background:var(--panel);color:var(--txt);border-radius:10px;padding:9px 13px;font:inherit;white-space:nowrap}
+nav button.active,.btn.primary{background:#16452f;border-color:#26784e;color:#d9ffea}
+main{max-width:850px;margin:auto;padding:16px 16px 40px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px;margin-bottom:12px}
+.metric{font-size:25px;font-weight:750;direction:ltr;text-align:right}.green{color:var(--green)}.blue{color:var(--blue)}.warn{color:var(--warn)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.pill{font-size:11px;padding:3px 8px;border-radius:30px;background:#193c30;color:var(--green)}
+.pill.warn{background:#47371f;color:var(--warn)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button{cursor:pointer}button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+input{width:100%;background:#091a27;color:white;border:1px solid var(--line);border-radius:9px;padding:10px;font:inherit;margin:6px 0 10px}
+.panel{display:none}.panel.active{display:block}.notice{border-right:3px solid var(--warn);padding:9px 12px;background:#2b261d;border-radius:8px;color:#ffe3b5;font-size:13px}
+.item{padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.metric{font-size:23px}header{padding-top:18px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="row"><div><h1>مركز مطوري OPPO Reno5</h1><div class="small">لوحة تحكم محلية • واجهة عربية • جهاز واحد</div></div><span class="pill">وضع المطوّر</span></div>
+</div></header>
+<nav aria-label="أقسام التطبيق">
+<button class="active" data-tab="home">الرئيسية</button><button data-tab="wallet">الرصيد التجريبي</button><button data-tab="permissions">الأذونات</button><button data-tab="accounts">الحسابات</button><button data-tab="payments">اختبار الدفع</button>
+</nav>
+<main>
+<section id="home" class="panel active">
+<div class="card">
+<div class="row"><div><h2>أهلاً بك في لوحة التطوير</h2><div class="muted">كل أدوات التجربة في واجهة واحدة على هاتفك.</div></div><span class="pill">محلي</span></div>
+<div class="grid" style="margin-top:15px">
+<div><div class="small">الرصيد الافتراضي</div><div class="metric green" id="homeBalance">$10,000.00</div></div>
+<div><div class="small">وضع الدفع</div><div class="metric blue" style="font-size:19px">TEST فقط</div></div>
+</div></div>
+<div class="card"><h2>حالة الجهاز</h2><div class="row"><span>التحكم المسموح</span><strong class="green">OPPO Reno5</strong></div><div class="small" id="deviceStatus">يتم التحقق من طراز الهاتف داخل التطبيق.</div></div>
+<div class="notice">الرصيد المعروض محاكاة محلية للاختبار فقط. لا توجد بطاقة Visa حقيقية ولا أموال قابلة للسحب أو التحويل.</div>
+</section>
+<section id="wallet" class="panel">
+<div class="card"><h2>المحفظة التجريبية</h2><div class="small">رصيد افتراضي مستقل عن أي حساب بنكي أو بطاقة</div><div class="metric green" id="balance">$10,000.00</div>
+<div class="actions"><button class="btn primary" id="resetBalance">إعادة ضبط إلى 10,000 دولار</button><button class="btn" id="addTest">إضافة 25 دولارًا تجريبيًا</button></div></div>
+<div class="card"><h3>آخر حركة</h3><div id="lastTx" class="muted">لم تُسجل حركات بعد.</div></div>
+</section>
+<section id="permissions" class="panel">
+<div class="card"><h2>أذونات التطبيق</h2><p class="muted">التطبيق الحالي لا يطلب أذونات حساسة أو وصولًا شاملًا. يقتصر على ما يحتاجه فعلًا.</p>
+<div class="item row"><div><strong>الإنترنت</strong><div class="small">غير مطلوب للوحة المحلية الحالية</div></div><span class="pill">محلي</span></div>
+<div class="item row"><div><strong>الكاميرا والميكروفون والموقع والملفات</strong><div class="small">لا تستخدمها النسخة الحالية</div></div><span class="pill">غير مطلوبة</span></div>
+<div class="item row"><div><strong>قفل الجهاز بالبصمة أو PIN</strong><div class="small">يُدار من نظام Android</div></div><span class="pill">حماية النظام</span></div>
+<div class="notice" style="margin-top:12px">لن نفعّل كل الأذونات دفعة واحدة؛ أي إذن إضافي يُضاف عند وجود ميزة تحتاجه وبموافقتك.</div></div>
+</section>
+<section id="accounts" class="panel">
+<div class="card"><h2>الحسابات المرتبطة</h2><p class="muted">لا توجد حسابات موصولة بهذه النسخة حتى الآن.</p>
+<div class="item"><strong>GitHub</strong><div class="small">اربطه من خلال تسجيل الدخول الرسمي وصلاحيات محدودة للمستودع.</div></div>
+<div class="item"><strong>Stripe</strong><div class="small">استخدم مفاتيح الاختبار من لوحة Stripe فقط، ولا تضع المفاتيح السرية داخل APK.</div></div>
+<div class="item"><strong>حالة التوثيق</strong><div class="small">لا نعرض شارة زرقاء إلا إذا أكدتها الخدمة الأصلية عبر مصدر رسمي. أي علامة تجريبية لا تعني توثيقًا.</div></div>
+</div></section>
+<section id="payments" class="panel">
+<div class="card"><h2>اختبار الدفع</h2><span class="pill warn">محاكاة محلية — لا يوجد خصم</span>
+<p class="muted">هذه الشاشة تسجل محاولة اختبار شكلية فقط. لم يتم ربط بوابة دفع حقيقية في هذه النسخة.</p>
+<label for="amount">قيمة الاختبار بالدولار</label><input id="amount" type="number" min="1" max="10000" step="1" value="25">
+<div class="actions"><button class="btn primary" id="runTest">تنفيذ محاكاة الاختبار</button></div><p id="paymentResult" class="small" aria-live="polite">لم يبدأ أي اختبار بعد.</p>
+</div>
+<div class="notice">لتجربة Stripe فعليًا، يجب إعداد Stripe Test Mode وخادم تجريبي آمن. لا تدخل بيانات بطاقة حقيقية هنا.</div>
+</section>
+</main>
+<footer>Reno5 Developer Control Hub • بيانات المحفظة محفوظة محليًا على هذا الهاتف فقط</footer>
+<script>
+const tabs=[...document.querySelectorAll('nav button')];
+tabs.forEach(b=>b.addEventListener('click',()=>{tabs.forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===b.dataset.tab));}));
+const KEY='reno5_demo_balance_v1';
+let balance=Number(localStorage.getItem(KEY));if(!Number.isFinite(balance)||balance<0)balance=10000;
+function money(n){return '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function paint(){document.getElementById('balance').textContent=money(balance);document.getElementById('homeBalance').textContent=money(balance);localStorage.setItem(KEY,String(balance));}
+document.getElementById('resetBalance').addEventListener('click',()=>{balance=10000;paint();document.getElementById('lastTx').textContent='تمت إعادة ضبط الرصيد الافتراضي.';});
+document.getElementById('addTest').addEventListener('click',()=>{balance+=25;paint();document.getElementById('lastTx').textContent='إضافة تجريبية بقيمة $25 — لا توجد أموال حقيقية.';});
+document.getElementById('runTest').addEventListener('click',()=>{const n=Number(document.getElementById('amount').value);const out=document.getElementById('paymentResult');if(!Number.isFinite(n)||n<=0||n>10000){out.textContent='أدخل مبلغًا بين 1 و10,000 دولار.';return;}out.textContent='نجحت المحاكاة المحلية لمبلغ '+money(n)+'. لم يتم الاتصال ببوابة دفع ولم يحدث أي خصم.';});
+paint();
+</script>
+</body></html>
