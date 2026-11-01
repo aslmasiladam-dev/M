@@ -1,6 +1,7 @@
 package com.aslmasiladam.androidarchitecturehub
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import android.webkit.WebChromeClient
@@ -26,6 +27,15 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // This build is intentionally restricted to the user's OPPO Reno5 (CPH2159).
+        val isTargetDevice = Build.MANUFACTURER.equals("OPPO", ignoreCase = true) &&
+            Build.MODEL.contains("CPH2159", ignoreCase = true)
+        if (!isTargetDevice) {
+            Toast.makeText(this, "هذا الإصدار مخصص لهاتف OPPO Reno5 CPH2159 فقط.", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
+
         // Keep app content out of screenshots and the recent-apps preview.
         window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
@@ -33,28 +43,22 @@ class MainActivity : FragmentActivity() {
         )
         window.statusBarColor = Color.rgb(8, 22, 34)
         window.navigationBarColor = Color.rgb(8, 22, 34)
-
         showLockedScreen()
     }
 
     override fun onStart() {
         super.onStart()
-        if (needsAuthentication && !authenticating) {
-            authenticateUser()
-        }
+        if (needsAuthentication && !authenticating && !isFinishing) authenticateUser()
     }
 
     override fun onStop() {
-        // Require authentication again after the app leaves the foreground.
-        if (authenticated && !authenticating) {
-            needsAuthentication = true
-        }
+        if (authenticated && !authenticating) needsAuthentication = true
         super.onStop()
     }
 
     private fun showLockedScreen() {
         setContentView(TextView(this).apply {
-            text = "Reno5 Ultimate Hub\n\nجارٍ التحقق من هويتك..."
+            text = "مركز مطوري Reno5\n\nجارٍ التحقق من هويتك..."
             textSize = 18f
             setTextColor(Color.WHITE)
             gravity = android.view.Gravity.CENTER
@@ -77,14 +81,11 @@ class MainActivity : FragmentActivity() {
 
         authenticating = true
         showLockedScreen()
-
         val prompt = BiometricPrompt(
             this,
             ContextCompat.getMainExecutor(this),
             object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationSucceeded(
-                    result: BiometricPrompt.AuthenticationResult
-                ) {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
                     authenticating = false
                     authenticated = true
@@ -92,17 +93,10 @@ class MainActivity : FragmentActivity() {
                     showHub()
                 }
 
-                override fun onAuthenticationError(
-                    errorCode: Int,
-                    errString: CharSequence
-                ) {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
                     authenticating = false
-                    Toast.makeText(
-                        this@MainActivity,
-                        "لم يتم فتح التطبيق: $errString",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@MainActivity, "لم يتم فتح التطبيق: $errString", Toast.LENGTH_SHORT).show()
                     finish()
                 }
 
@@ -118,12 +112,11 @@ class MainActivity : FragmentActivity() {
         )
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("حماية Reno5 Ultimate Hub")
+            .setTitle("حماية مركز مطوري Reno5")
             .setSubtitle("أكّد هويتك بالبصمة أو بقفل شاشة الهاتف")
             .setAllowedAuthenticators(allowedAuthenticators)
             .setConfirmationRequired(false)
             .build()
-
         prompt.authenticate(promptInfo)
     }
 
@@ -141,28 +134,19 @@ class MainActivity : FragmentActivity() {
                 override fun shouldOverrideUrlLoading(
                     view: WebView,
                     request: android.webkit.WebResourceRequest
-                ): Boolean {
-                    val target = request.url
-                    return !(target.scheme == "file" &&
-                        target.host == null &&
-                        target.path?.startsWith("/android_asset/") == true)
-                }
+                ): Boolean = true
             }
             webChromeClient = WebChromeClient()
         }
         webView = page
         setContentView(page)
-        page.loadUrl("file:///android_asset/index.html")
+        page.loadUrl("file:///android_asset/developer-hub.html")
     }
 
     @Deprecated("Deprecated in Android API")
     override fun onBackPressed() {
         val page = webView
-        if (page != null && page.canGoBack()) {
-            page.goBack()
-        } else {
-            super.onBackPressed()
-        }
+        if (page != null && page.canGoBack()) page.goBack() else super.onBackPressed()
     }
 
     override fun onDestroy() {
